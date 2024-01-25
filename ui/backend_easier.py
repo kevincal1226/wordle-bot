@@ -119,7 +119,7 @@ def check_guess():
     # both the solution index and current guess are passed in as part of the query
     # i.e. www.blog.com/article?index=1&guess=HUMAN
     solution_index = flask.request.args.get("index", default=-1, type=int)
-    current_guess = flask.request.args.get("guess", default="", type=str)
+    current_guess = flask.request.args.get("guess", default=None, type=str)
 
     # validate the arguments
     if (solution_index < 0
@@ -129,7 +129,8 @@ def check_guess():
         return flask.jsonify({"feedback": "INVALID"}), 200
     
     # useful to print to check against frontend
-    print(VALID_SOLUTIONS[solution_index])
+    print("WORD: ", VALID_SOLUTIONS[solution_index])
+    print("GUESS: ", current_guess)
     return flask.jsonify({"feedback": generate_feedback(current_guess, VALID_SOLUTIONS[solution_index])}), 200
 
 
@@ -154,7 +155,7 @@ def generate_guess():
             return flask.jsonify({"guess": "STEAM"}), 200
         if len(current_guesses) == 1:
             return flask.jsonify({"guess": "FLOUR"}), 200
-
+        
         return flask.jsonify({"guess": letter_frequency(current_guesses, guess_feedback, filter_on_feedback(current_guesses, guess_feedback, VALID_GUESSES))}), 200
 
 
