@@ -60,7 +60,6 @@ def letter_frequency(current_guesses, guess_feedback, filtered_guesses):
         word_letters[i] = 1
       else:
         word_letters[i] += 1
-    current_letter = None
     weighing = 1
     correct_weighing = 3
     misplaced_weighing = 1.3
