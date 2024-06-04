@@ -1,5 +1,3 @@
-# heavy inspiration from EECS485's serverside/clientside projects
-
 import flask
 from flask import session
 import sqlite3
@@ -30,9 +28,11 @@ with open(SOLUTIONS_PATH, "r") as read_obj:
 
 # creates an app with this file's name as the name of the app
 app = flask.Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+app.secret_key = 'supersecretkey'  # Set a secret key for sessions
 
 # this is the route to access the user interface
-# This route will also access the db initally to obtain any stats already in the db
+# This route will also access the db initially to obtain any stats already in the db
 @app.route("/", methods=["GET"])
 def index():
     # connection to the database
@@ -55,7 +55,7 @@ def index():
     for i in range(len(stats["modes"])):
         stats["modes"][i]["win_rate"] = round(stats["modes"][i]["win_rate"], 2)
         stats["modes"][i]["avg_guesses"] = round(stats["modes"][i]["avg_guesses"], 2)
-    
+
     return flask.render_template("index.html", **stats), 200
 
 
@@ -106,8 +106,9 @@ def insert_stat():
 # this is called every time the game is reset in the frontend
 @app.route("/get_solution_index/", methods=["GET"])
 def get_solution_index():
-    return flask.jsonify({"index": random.randint(0, len(VALID_SOLUTIONS) - 1)}), 200
-
+    solution_index = random.randint(0, len(VALID_SOLUTIONS) - 1)
+    session['solution_index'] = solution_index
+    return flask.jsonify({"index": solution_index}), 200
 
 
 # Checks that a guess is valid and compares it to the solution word for feedback
@@ -116,32 +117,24 @@ def get_solution_index():
 # this is identical to the one in wordle_solution.py or wordle_master.ipynb
 @app.route("/check_guess/", methods=["POST"])
 def check_guess():
-    # TODO
     # both the solution index and current guess are passed in as part of the query
-    # i.e. /check_guess/?index=1&guess=HUMAN
-    # We want to extract the index and guess from this query
-    # see lines 69-73 for examples on how to get the solution index and current guess from the query
-    solution_index = flask.request.args.get("index", default=-1, type=int)
+    solution_index = session.get('solution_index', None)
+    guess = flask.request.args.get("guess", default=None, type=str).upper()
 
-        
-    guess = flask.request.args.get("guess", default=None, type=str)
-
-    # next, validate the arguments
-    # the solution index you just extracted has to be a valid index in VALID_SOLUTIONS
-    # and your current guess has to follow the rules of Wordle. Luckily, we have previously implemented
-    # is_valid_guess, which is available in utility.py for you to use
-
-    # replace the False with any comparisons you need. Return the same way
-    if not is_valid_guess(VALID_SOLUTIONS[solution_index], VALID_GUESSES) or not is_valid_guess(guess, VALID_GUESSES):
+    if solution_index is None or guess is None:
         return flask.jsonify({"feedback": "INVALID"}), 200
-    
+
+    # validate the guess
+    if guess not in VALID_GUESSES:
+        return flask.jsonify({"feedback": "INVALID"}), 200
+
     # useful to print to check against frontend
     print("SOLUTION: ", VALID_SOLUTIONS[solution_index])
     print("GUESS: ", guess)
 
     # since the guess is a valid guess, we need to generate the feedback that corresponds to this guess
-    # again, the previously implemented generate_feedback in utility.py can help
-    return flask.jsonify({"feedback": generate_feedback(guess, VALID_SOLUTIONS[solution_index])}), 200
+    feedback = generate_feedback(guess, VALID_SOLUTIONS[solution_index])
+    return flask.jsonify({"feedback": feedback}), 200
 
 
 # generates the guess using the specified algorithm and data
@@ -163,33 +156,13 @@ def generate_guess():
         if len(current_guesses) == 0:
             return flask.jsonify({"guess": "CRANE"}), 200
         return flask.jsonify({"guess": only_matched_patterns(current_guesses, guess_feedback, VALID_SOLUTIONS)}), 200
-        
-    # TODO
-    # add your own algorithms here
-    # keep in mind that the only options for mode (i.e. the allowable algorithms) are:
-    # only_matched_patterns, letter_frequency, entropy and tfidf
-    # If you want to add custom algorithms with different naming schemes, talk to your project lead.
-    # It's not hard, just involves changing the frontend slightly.
+
     if mode == "letter_frequency":
         if len(current_guesses) == 0:
             return flask.jsonify({"guess": "STEAM"}), 200
         if len(current_guesses) == 1:
             return flask.jsonify({"guess": "FLOUR"}), 200
-        else:
-            return flask.jsonify({"guess": letter_frequency(current_guesses, guess_feedback, filter_on_feedback(current_guesses, guess_feedback, VALID_GUESSES))}), 200    
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return flask.jsonify({"guess": letter_frequency(current_guesses, guess_feedback, filter_on_feedback(current_guesses, guess_feedback, VALID_SOLUTIONS))}), 200
 
 
 # everything below is taken straight from EECS 485
@@ -231,3 +204,6 @@ def close_db(error):
     if sqlite_db is not None:
         sqlite_db.commit()
         sqlite_db.close()
+
+if __name__ == "__main__":
+    app.run(debug=True)
