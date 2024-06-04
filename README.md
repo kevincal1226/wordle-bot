@@ -1,4 +1,6 @@
-# MDST F23 Cracking Wordle Project
+# Wordle Bot
+
+Wordle bot that achieves a 99% accuracy and average of less than 4.5 guesses based on an adjusted letter frequency algorithm, accounting not only for letter frequency, but also frequency for each index of the word as well. 
 
 Useful commands:
 
