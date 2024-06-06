@@ -159,9 +159,9 @@ def generate_guess():
 
     if mode == "letter_frequency":
         if len(current_guesses) == 0:
-            return flask.jsonify({"guess": "STEAM"}), 200
-        if len(current_guesses) == 1:
-            return flask.jsonify({"guess": "FLOUR"}), 200
+            return flask.jsonify({"guess": "CRANE"}), 200
+        # if len(current_guesses) == 1:
+        #     return flask.jsonify({"guess": "FLOUR"}), 200
         return flask.jsonify({"guess": letter_frequency(current_guesses, guess_feedback, filter_on_feedback(current_guesses, guess_feedback, VALID_SOLUTIONS))}), 200
 
 
