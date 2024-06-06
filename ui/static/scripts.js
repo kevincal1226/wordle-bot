@@ -74,7 +74,7 @@ function insert_letters() {
             else {
                 curr_letter.className = ("letter wrong");
             }
-            
+
             curr_letter.textContent = current_guesses[row][col];
         }
     }
@@ -103,7 +103,7 @@ async function submit_user_input() {
             guess_feedback.push(data.feedback);
             insert_letters();
             if (guess_feedback[guess_feedback.length - 1] === "CCCCC") {
-                user_input.value = "CORRECTLY GUESSED";               
+                user_input.value = "CORRECTLY GUESSED";
             }
         }
     } catch (error) {
@@ -124,9 +124,11 @@ async function simulate() {
         while (current_guesses.length < NUM_GUESSES) {
             try {
                 // generate a next guess
-                const generateResponse = await fetch("/generate_guess/", {credentials: "same-origin",
-                                                         method: "POST",
-                                                         body: JSON.stringify({mode, current_guesses, guess_feedback})});
+                const generateResponse = await fetch("/generate_guess/", {
+                    credentials: "same-origin",
+                    method: "POST",
+                    body: JSON.stringify({ mode, current_guesses, guess_feedback })
+                });
                 if (!generateResponse.ok) throw new Error(generateResponse.statusText);
                 const { guess } = await generateResponse.json();
                 // get feedback for the next guess
