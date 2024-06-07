@@ -44,7 +44,7 @@ async function reset_board() {
     }
 
     // clear the top words section
-    document.getElementById("top-words").innerHTML = "Not Available";
+    // document.getElementById("top-words").innerHTML = "Not Available";
 
     // clear all user input
     document.getElementById("user-input").value = "";

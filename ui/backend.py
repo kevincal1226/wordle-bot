@@ -164,6 +164,11 @@ def generate_guess():
         #     return flask.jsonify({"guess": "FLOUR"}), 200
         return flask.jsonify({"guess": letter_frequency(current_guesses, guess_feedback, filter_on_feedback(current_guesses, guess_feedback, VALID_SOLUTIONS))}), 200
 
+    if mode == "entropy":
+        if len(current_guesses) == 0:
+            return flask.jsonify({"guess": "CRANE"}), 200
+        return flask.jsonify({"guess": entropy(filter_on_feedback(current_guesses, guess_feedback, VALID_SOLUTIONS))}), 200
+
 
 # everything below is taken straight from EECS 485
 # no need to touch this part

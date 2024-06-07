@@ -4,6 +4,8 @@ from utility import *
 import pathlib
 import random
 import string
+import math
+import collections
 
 
 # referred to as the brute force algorithm in week 2 slides
@@ -15,6 +17,21 @@ def only_matched_patterns(current_guesses, guess_feedback, valid_solutions):
         if current_word_feedback == guess_feedback[-1]:
             remaining_solutions.append(word)
     return random.choice(remaining_solutions)
+
+def entropy(filtered_guesses):
+    entropies = []
+    for word in filtered_guesses:
+        perms = collections.defaultdict(int)
+        for temp in filtered_guesses:
+            feedback = generate_feedback(word, temp)
+            perms[feedback] += 1
+        currentEntropy = 0
+        for val in perms.values():
+            probability = val / len(filtered_guesses)
+            currentEntropy -= (probability * math.log2(probability))
+        entropies.append(currentEntropy)
+
+    return filtered_guesses[entropies.index(max(entropies))]
 
 ###################################################################
 def letter_frequency(current_guesses, guess_feedback, filtered_guesses):
