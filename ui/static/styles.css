@@ -1,98 +1,123 @@
-h1, .mode h3, .change-mode, .main-container, .side-container, #stats-container, #top-words-container {
-    border: 1px solid black;
+h1,
+.mode h3,
+.change-mode,
+.main-container,
+.side-container,
+#stats-container,
+#top-words-container {
+  border: 1px solid black;
 }
 
-h1, .mode {
-    padding: 1vh 1vw;
-    text-align: center;
+h1,
+.mode {
+  padding: 1vh 1vw;
+  text-align: center;
 }
 
-.mode h3, #curr-mode, .change-mode, .mode select, .mode button, .side-container, .main-container {
-    display: inline-block;
+.mode h3,
+#curr-mode,
+.change-mode,
+.mode select,
+.mode button,
+.side-container,
+.main-container {
+  display: inline-block;
 }
 
-.mode h3, .change-mode {
-    width: 40vw;
-    padding: 1vh 1vw;
-    margin: 5px;
-}
-
-.letter {
-    border: 1px solid black;
-    width: 50px;
-    height: 50px;
-    display: inline-block;
-    margin: 5px;
-    text-align: center;
-    line-height: 50px;
-    font-size: 50px;
-    color: white;
-}
-
-.row {
-    margin: 5px;
+.mode h3,
+.change-mode {
+  width: 40vw;
+  padding: 1vh 1vw;
+  margin: 5px;
 }
 
 #game {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.main-container, .side-container {
-    width: 40vw;
-    height: 70vh;
-    margin: 5px;
+.main-container,
+.side-container {
+  width: 40vw;
+  height: 70vh;
+  margin: 5px;
 }
 
 .disabled {
-    display: none;
+  display: none;
 }
 
-#if-user-mode, #not-user-mode {
-    text-align: center;
+#if-user-mode,
+#not-user-mode {
+  text-align: center;
 }
 
-#if-user-mode *, #not-user-mode * {
-    text-align: center;
-    margin: 5px;
+#if-user-mode *,
+#not-user-mode * {
+  text-align: center;
+  margin: 5px;
 }
 
 .correct {
-    background-color: #6ca965;
+  background-color: #6ca965;
 }
 
 .misplaced {
-    background-color: #c8b653;
+  background-color: #c8b653;
 }
 
 .wrong {
-    background-color: #000000;
+  background-color: #000000;
 }
 
-#stats-container, #top-words-container {
-    height: 40%;
-    text-align: center;
+#stats-container,
+#top-words-container {
+  height: 40%;
+  text-align: center;
 }
 
 .mode-stat {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .stats-line {
-    padding: 5px;
-    border: 1px solid black;
-    margin: 5px;
-    text-align: center;
+  padding: 5px;
+  border: 1px solid black;
+  margin: 5px;
+  text-align: center;
 }
 
 .stats-line span {
-    margin: 5px;
+  margin: 5px;
+}
+
+/* Fix for bouncy grid */
+#guesses {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+
+.letter {
+  border: 1px solid black;
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  margin: 5px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 50px;
+  color: white;
+  grid-column: span 1;
+  grid-row: span 1;
 }
