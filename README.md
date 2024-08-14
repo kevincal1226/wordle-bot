@@ -10,6 +10,9 @@ sudo apt-get install sqlite3
 ### install a virtual environment, folder named env
 python3 -m venv env
 
+### change directory into ui
+cd ui
+
 ### enter the virtual environment, must do this every time
 source env/bin/activate
 
